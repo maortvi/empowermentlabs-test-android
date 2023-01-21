@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Empowerment Labs Test</string>
+    <string name="search_receipe">Search Recipe</string>
+    <string name="back_button">Back</string>
 </resources>

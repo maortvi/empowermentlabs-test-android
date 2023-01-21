@@ -4,12 +4,20 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.res.stringResource
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
+import com.example.empowermentlabstest.ui.navigation.EmpowermentLabsScreen
 import com.example.empowermentlabstest.ui.theme.EmpowermentLabsTestTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -24,7 +32,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    Greeting("Android")
+                    AppScreen()
                 }
             }
         }
@@ -32,14 +40,68 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun Greeting(name: String) {
-    Text(text = "Hello $name!")
+fun AppScreen(
+    modifier: Modifier = Modifier,
+    navController: NavHostController = rememberNavController()
+) {
+    val backStackEntry by navController.currentBackStackEntryAsState()
+    val currentScreen = EmpowermentLabsScreen.valueOf(
+        backStackEntry?.destination?.route ?: EmpowermentLabsScreen.Start.name
+    )
+
+    Scaffold(
+        topBar = {
+            EmpowermentLabsAppBar(
+                currentScreen = currentScreen,
+                canNavigateBack = navController.previousBackStackEntry != null,
+                navigateUp = { navController.navigateUp() }
+            )
+        }
+    ) { paddingValues ->
+        NavHost(
+            navController = navController,
+            startDestination = EmpowermentLabsScreen.Start.name,
+            modifier = modifier.padding(paddingValues)
+        ) {
+            composable(route = EmpowermentLabsScreen.Start.name) {
+
+            }
+            composable(route = EmpowermentLabsScreen.SearchRecipe.name) {
+
+            }
+
+        }
+    }
 }
 
+@Composable
+fun EmpowermentLabsAppBar(
+    currentScreen: EmpowermentLabsScreen,
+    canNavigateBack: Boolean,
+    navigateUp: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    TopAppBar(
+        title = { Text(stringResource(currentScreen.title)) },
+        modifier = modifier,
+        navigationIcon = {
+            if (canNavigateBack) {
+                IconButton(onClick = navigateUp) {
+                    Icon(
+                        imageVector = Icons.Filled.ArrowBack,
+                        contentDescription = stringResource(R.string.back_button)
+                    )
+                }
+            }
+        }
+    )
+}
+
+/*
 @Preview(showBackground = true)
 @Composable
 fun DefaultPreview() {
     EmpowermentLabsTestTheme {
         Greeting("Android")
     }
-}
+}*/
