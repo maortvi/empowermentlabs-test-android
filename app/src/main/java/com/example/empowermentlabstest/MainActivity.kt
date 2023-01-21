@@ -18,6 +18,9 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.empowermentlabstest.ui.navigation.EmpowermentLabsScreen
+import com.example.empowermentlabstest.ui.recipedetail.RecipeDetailScreen
+import com.example.empowermentlabstest.ui.recipeslist.RecipesListScreen
+import com.example.empowermentlabstest.ui.searchrecipe.SearchRecipeScreen
 import com.example.empowermentlabstest.ui.theme.EmpowermentLabsTestTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -64,12 +67,14 @@ fun AppScreen(
             modifier = modifier.padding(paddingValues)
         ) {
             composable(route = EmpowermentLabsScreen.Start.name) {
-
+                RecipesListScreen()
             }
             composable(route = EmpowermentLabsScreen.SearchRecipe.name) {
-
+                SearchRecipeScreen()
             }
-
+            composable(route = EmpowermentLabsScreen.RecipeDetail.name) {
+                RecipeDetailScreen()
+            }
         }
     }
 }
@@ -96,12 +101,3 @@ fun EmpowermentLabsAppBar(
         }
     )
 }
-
-/*
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
-    EmpowermentLabsTestTheme {
-        Greeting("Android")
-    }
-}*/

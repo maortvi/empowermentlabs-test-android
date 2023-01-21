@@ -7,5 +7,6 @@ enum class EmpowermentLabsScreen(
     @StringRes val title: Int
 ) {
     Start(title = R.string.app_name),
-    SearchRecipe(title = R.string.search_receipe),
+    SearchRecipe(title = R.string.search_recipe),
+    RecipeDetail(title = R.string.recipe_detail),
 }
