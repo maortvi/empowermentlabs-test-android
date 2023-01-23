@@ -1,6 +1,7 @@
 package com.example.empowermentlabstest.data.di
 
 import com.example.empowermentlabstest.data.api.RecipeApi
+import com.example.empowermentlabstest.data.network.api.KtorRecipeApi
 import com.example.empowermentlabstest.data.repository.RecipeRepositoryImpl
 import com.example.empowermentlabstest.domain.di.IODispatcher
 import com.example.empowermentlabstest.domain.repository.RecipeRepository
@@ -8,6 +9,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import io.ktor.client.*
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.serialization.json.Json
 import javax.inject.Singleton
@@ -38,4 +40,12 @@ object DataModule {
         )
     }
 
+    @Provides
+    @Singleton
+    fun provideRecipeApi(
+        @EmpowermentLabsHttpClient httpClient: HttpClient,
+    ): RecipeApi =
+        KtorRecipeApi(
+            httpClient
+        )
 }

@@ -13,7 +13,7 @@ class RecipeRepositoryImpl(
 
     override suspend fun loadRandomRecipes(): List<RecipeModel> =
         withContext(coroutineDispatcher) {
-            recipeApi.loadRandomRecipes()
+            recipeApi.loadRandomRecipes().recipes
         }
 
 }

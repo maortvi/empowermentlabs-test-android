@@ -33,12 +33,15 @@ object NetworkModule {
         okHttpClient: OkHttpClient,
     ): HttpClient = HttpClient(OkHttp) {
         defaultRequest {
-            host = ""
+            host = "api.spoonacular.com/recipes"
+            headers {
+                append("x-api-key", "6c86517c560c44f5a4fda57451506069")
+            }
             if (!headers.contains(HttpHeaders.ContentType)) {
                 contentType(ContentType.Application.Json)
             }
             url {
-                protocol = URLProtocol.HTTP
+                protocol = URLProtocol.HTTPS
             }
         }
         engine {

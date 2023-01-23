@@ -1,9 +1,9 @@
 package com.example.empowermentlabstest.data.api
 
-import com.example.empowermentlabstest.domain.model.RecipeModel
+import com.example.empowermentlabstest.data.network.model.RecipesResponseModel
 
 interface RecipeApi {
 
-    suspend fun loadRandomRecipes(): List<RecipeModel>
+    suspend fun loadRandomRecipes(): RecipesResponseModel
 
 }

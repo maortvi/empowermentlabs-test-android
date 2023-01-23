@@ -3,6 +3,8 @@ package com.example.empowermentlabstest.ui.recipeslist
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.empowermentlabstest.domain.usecase.LoadRecipesListUseCase
+import com.example.empowermentlabstest.domain.usecase.base.UseCaseResult
 import com.example.empowermentlabstest.ui.navigation.AppDirections
 import com.example.empowermentlabstest.ui.navigation.NavigationManager
 import com.example.empowermentlabstest.ui.utils.mutableStateOf
@@ -11,8 +13,11 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class RecipesListViewModel @Inject constructor(
-    savedStateHandle: SavedStateHandle, private val navigationManager: NavigationManager
+class RecipesListViewModel
+@Inject constructor(
+    savedStateHandle: SavedStateHandle,
+    private val navigationManager: NavigationManager,
+    private val loadRecipesListUseCase: LoadRecipesListUseCase
 ) : ViewModel() {
 
     var screenModel by savedStateHandle.mutableStateOf(RecipesListScreenModel())
@@ -23,9 +28,21 @@ class RecipesListViewModel @Inject constructor(
     }
 
     private fun loadRecipesList() = viewModelScope.launch {
-        screenModel = screenModel.copy(
-            recipes = listOf("Hello", "Hi", "Good bye", "See you later")
-        )
+        when (val result = loadRecipesListUseCase.invoke(Unit)) {
+            is UseCaseResult.Success -> {
+                screenModel = screenModel.copy(
+                    recipes = result.data.map {
+                        it.title
+                    }
+                )
+            }
+            is UseCaseResult.Error -> {
+                // TODO: Display error dialog to the user
+                screenModel = screenModel.copy(
+                    recipes = emptyList()
+                )
+            }
+        }
     }
 
     fun onRecipeItemClick() = viewModelScope.launch {
