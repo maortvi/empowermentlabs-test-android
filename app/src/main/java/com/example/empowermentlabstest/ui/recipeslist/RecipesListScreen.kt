@@ -1,13 +1,18 @@
 package com.example.empowermentlabstest.ui.recipeslist
 
 import androidx.compose.runtime.Composable
-import com.pgcm.sportapp.presentation.ui.component.defaultlist.DefaultListView
+import androidx.compose.runtime.collectAsState
+import androidx.hilt.navigation.compose.hiltViewModel
 
 @Composable
-fun RecipesListScreen() {
-    val titles = listOf<String>("Hi", "Hello", "Good bye", "See you around")
-    DefaultListView(
-        titles = titles,
-        onItemClick = {}
-    )
+fun RecipesListScreen(
+    viewModel: RecipesListViewModel = hiltViewModel(),
+) {
+    val uiState = viewModel.uiState.collectAsState()
+
+//    DefaultListView(
+//        titles = uiState.value.recipes,
+//        onItemClick = { onItemClick }
+//    )
+
 }

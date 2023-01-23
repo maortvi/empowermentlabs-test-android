@@ -26,7 +26,7 @@ fun DefaultItemView(
     Surface(
         modifier = modifier
             .fillMaxWidth()
-            .clickable { onItemClick }
+            .clickable(onClick = { onItemClick() })
     ) {
 
         Row(

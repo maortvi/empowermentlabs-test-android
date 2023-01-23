@@ -23,7 +23,7 @@ fun DefaultListView(
                 title = item,
                 onItemClick = onItemClick
             )
-            Divider(color = Color.Gray)
+            Divider(color = Color.LightGray)
         }
     }
 
