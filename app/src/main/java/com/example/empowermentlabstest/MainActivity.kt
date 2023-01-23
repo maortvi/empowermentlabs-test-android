@@ -2,21 +2,38 @@ package com.example.empowermentlabstest
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
-import androidx.navigation.NavHostController
+import androidx.compose.ui.platform.LocalContext
+import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navOptions
+import com.example.empowermentlabstest.ui.navigation.AppDirections
+import com.example.empowermentlabstest.ui.navigation.GoBack
+import com.example.empowermentlabstest.ui.navigation.NavigationManager
+import com.example.empowermentlabstest.ui.navigation.navigationGraph
 import com.example.empowermentlabstest.ui.theme.EmpowermentLabsTestTheme
+import com.example.empowermentlabstest.ui.utils.navigate
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
+    @Inject
+    lateinit var navigationManager: NavigationManager
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        var destination = AppDirections.Main::class.toString()
+
         setContent {
             EmpowermentLabsTestTheme {
                 // A surface container using the 'background' color from the theme
@@ -24,7 +41,10 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    AppScreen()
+                    AppScreen(
+                        navigationManager = navigationManager,
+                        destination = destination
+                    )
                 }
             }
         }
@@ -33,64 +53,32 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun AppScreen(
-    modifier: Modifier = Modifier,
-    navController: NavHostController = rememberNavController()
+    navigationManager: NavigationManager,
+    destination: String
 ) {
-//    val backStackEntry by navController.currentBackStackEntryAsState()
-//    val currentScreen = EmpowermentLabsScreen.valueOf(
-//        backStackEntry?.destination?.route ?: EmpowermentLabsScreen.Start.name
-//    )
+    val navController = rememberNavController()
+    val backPressedDispatcher = LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher
 
-//    Scaffold(
-//        topBar = {
-//            EmpowermentLabsAppBar(
-//                currentScreen = currentScreen,
-//                canNavigateBack = navController.previousBackStackEntry != null,
-//                navigateUp = { navController.navigateUp() }
-//            )
-//        }
-//    ) { paddingValues ->
-//        NavHost(
-//            navController = navController,
-//            startDestination = EmpowermentLabsScreen.Start.name,
-//            modifier = modifier.padding(paddingValues)
-//        ) {
-//            composable(route = EmpowermentLabsScreen.Start.name) {
-//                RecipesListScreen(
-//                    onItemClick = {
-//                        navController.navigate(EmpowermentLabsScreen.RecipeDetail.name)
-//                    }
-//                )
-//            }
-//            composable(route = EmpowermentLabsScreen.SearchRecipe.name) {
-//                SearchRecipeScreen()
-//            }
-//            composable(route = EmpowermentLabsScreen.RecipeDetail.name) {
-//                RecipeDetailScreen()
-//            }
-//        }
-//    }
+    LaunchedEffect(LocalContext.current.applicationContext) {
+        navigationManager.commands.collect { command ->
+            when (command) {
+                GoBack -> backPressedDispatcher?.onBackPressed()
+                else -> {
+                    navController.navigate(
+                        route = command::class.toString(),
+                        args = command.args,
+                        navOptions = navOptions(command.navBuilder)
+                    )
+                }
+            }
+        }
+    }
+
+    NavHost(
+        navController = navController,
+        startDestination = destination,
+    ) {
+        navigationGraph()
+    }
+
 }
-
-//@Composable
-//fun EmpowermentLabsAppBar(
-//    currentScreen: EmpowermentLabsScreen,
-//    canNavigateBack: Boolean,
-//    navigateUp: () -> Unit,
-//    modifier: Modifier = Modifier
-//) {
-//    TopAppBar(
-//        title = { Text(stringResource(currentScreen.title)) },
-//        modifier = modifier,
-//        navigationIcon = {
-//            if (canNavigateBack) {
-//                IconButton(onClick = navigateUp) {
-//                    Icon(
-//                        imageVector = Icons.Filled.ArrowBack,
-//                        contentDescription = stringResource(R.string.back_button)
-//                    )
-//                }
-//            }
-//        }
-//    )
-//}
