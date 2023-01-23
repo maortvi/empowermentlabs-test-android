@@ -1,28 +1,39 @@
 package com.example.empowermentlabstest.ui.recipeslist
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.empowermentlabstest.ui.navigation.AppDirections
+import com.example.empowermentlabstest.ui.navigation.NavigationManager
+import com.example.empowermentlabstest.ui.utils.mutableStateOf
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class RecipesListViewModel @Inject constructor() : ViewModel() {
+class RecipesListViewModel @Inject constructor(
+    savedStateHandle: SavedStateHandle, private val navigationManager: NavigationManager
+) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(RecipesListScreenModel())
-    val uiState: StateFlow<RecipesListScreenModel> = _uiState.asStateFlow()
+    var screenModel by savedStateHandle.mutableStateOf(RecipesListScreenModel())
+        private set
 
     init {
         loadRecipesList()
     }
 
     private fun loadRecipesList() = viewModelScope.launch {
-        _uiState.update { recipesListScreenModel ->
-            recipesListScreenModel.copy(listOf("Hello", "Hi", "Good bye", "See you later"))
-        }
+        screenModel = screenModel.copy(
+            recipes = listOf("Hello", "Hi", "Good bye", "See you later")
+        )
     }
+
+    fun onRecipeItemClick() = viewModelScope.launch {
+        navigationManager.navigate(AppDirections.RecipeDetail)
+    }
+
+    fun onSearchClick() = viewModelScope.launch {
+        navigationManager.navigate(AppDirections.SearchRecipe)
+    }
+
 }
