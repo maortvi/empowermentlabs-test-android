@@ -16,4 +16,9 @@ class RecipeRepositoryImpl(
             recipeApi.loadRandomRecipes().recipes
         }
 
+    override suspend fun searchRecipe(recipe: String): List<RecipeModel> =
+        withContext(coroutineDispatcher) {
+            recipeApi.searchRecipe(recipe).results
+        }
+
 }

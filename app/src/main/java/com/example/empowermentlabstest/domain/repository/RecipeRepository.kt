@@ -6,4 +6,6 @@ interface RecipeRepository {
 
     suspend fun loadRandomRecipes(): List<RecipeModel>
 
+    suspend fun searchRecipe(recipe: String): List<RecipeModel>
+
 }
