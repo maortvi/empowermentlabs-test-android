@@ -11,7 +11,7 @@ import androidx.compose.ui.graphics.Color
 @Composable
 fun DefaultListView(
     titles: List<String>,
-    onItemClick: () -> Unit
+    onItemClick: (String) -> Unit
 ) {
 
     LazyColumn(
@@ -21,7 +21,7 @@ fun DefaultListView(
         itemsIndexed(titles) { _, item ->
             DefaultItemView(
                 title = item,
-                onItemClick = onItemClick
+                onItemClick = { onItemClick(item) }
             )
             Divider(color = Color.LightGray)
         }

@@ -1,6 +1,8 @@
 package com.example.empowermentlabstest.ui.navigation
 
 import android.os.Bundle
+import androidx.core.os.bundleOf
+import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.NavOptionsBuilder
 
 sealed class AppDirections(
@@ -24,6 +26,14 @@ sealed class AppDirections(
 
     object SearchRecipe : AppDirections()
 
-    object RecipeDetail : AppDirections()
+    class RecipeDetail(title: String) : AppDirections(
+        args = bundleOf(RecipeTitleId to title)
+    ) {
+        companion object {
+            private const val RecipeTitleId = "recipe_title_id"
+            fun SavedStateHandle.getRecipeTitle(): String =
+                this.get<String>(RecipeTitleId)!!
+        }
+    }
 
 }

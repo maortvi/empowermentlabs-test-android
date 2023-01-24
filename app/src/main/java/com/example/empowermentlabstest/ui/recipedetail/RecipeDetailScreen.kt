@@ -5,17 +5,20 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
-import com.example.empowermentlabstest.R
+import androidx.hilt.navigation.compose.hiltViewModel
 
 @Composable
-fun RecipeDetailScreen() {
+fun RecipeDetailScreen(
+    viewModel: RecipeDetailViewModel = hiltViewModel(),
+) {
+
+    val screenModel = viewModel.screenModel
 
     Column(
         modifier = Modifier
             .fillMaxWidth()
     ) {
-        Text(text = stringResource(id = R.string.app_name))
+        Text(text = screenModel.title)
     }
 
 }

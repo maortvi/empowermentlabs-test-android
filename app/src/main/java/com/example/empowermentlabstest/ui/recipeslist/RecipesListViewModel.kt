@@ -45,8 +45,8 @@ class RecipesListViewModel
         }
     }
 
-    fun onRecipeItemClick() = viewModelScope.launch {
-        navigationManager.navigate(AppDirections.RecipeDetail)
+    fun onRecipeItemClick(title: String) = viewModelScope.launch {
+        navigationManager.navigate(AppDirections.RecipeDetail(title))
     }
 
     fun onSearchClick() = viewModelScope.launch {

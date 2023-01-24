@@ -42,7 +42,7 @@ class SearchRecipeViewModel
         screenModel = screenModel.copy(search = search)
     }
 
-    fun onRecipeItemClick() = viewModelScope.launch {
+    fun onRecipeItemClick(title: String) = viewModelScope.launch {
         // TODO: Not part of the test :)
     }
 
